@@ -10,7 +10,7 @@ using std::cout;
 
 
 
-void place_ships_to_grid(Grid target, Tile::states default_tile)
+void place_ships_to_grid(Grid &target, Tile::states default_tile)
 {
 	char orientation;
 	char column_c;
@@ -53,7 +53,7 @@ bool is_killed (Grid &target, char column_c, int row)//that algorithm really suc
 	row--;
 	int column = (int)column_c - (int)'a';
 	if (target.tiles[10 * row + column].state != Tile::shot) return false;
-	cout << row << column << ' ';
+	//cout << row << column << ' ';
 	if (row != 0)
 	{
 		Tile* tile = &(target.tiles[10 * (row - 1) + column]);
@@ -121,9 +121,33 @@ bool is_killed (Grid &target, char column_c, int row)//that algorithm really suc
 	return true;
 }
 
-
-int ai_solution()
+void mark_killed(Grid &locator, Grid &field)
 {
-	return 0;
+	for(int i = 0; i <= 99; i++)
+		if(is_killed(field,(char)('a' + i/10),i%10 + 1))
+			locator.Shoot_around((char)('a' + i/10),i%10 + 1);
 }
+
+
+int ai_random(Grid &target)
+{
+	srand(time(NULL));
+	for(int i = 0;; i++)
+	{
+		if((target.tiles[i].state == Tile::unknown) && (rand() % 50 == 0)) return i;
+		if(i == 99) i = 0;
+	}
+}
+int ai_if_hit(Grid &target, int previous)
+{
+	srand(time(NULL));
+	while(true)
+	{
+		if((previous % 10) && (rand() % 10 != 0)) return previous - 10;
+		if((previous % 10 != 9) && (rand() % 10 != 0)) return previous + 10;
+		if((previous / 10) && (rand() % 10 != 0)) return previous - 1;
+		if((previous / 10 != 9) && (rand() % 10 != 0)) return previous + 1;
+	}
+}
+
 #endif // !GAME_CPP

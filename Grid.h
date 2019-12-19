@@ -23,6 +23,7 @@ public:
 	void Display();
 	int Place_ship(int size, char orientation, int row, char column_c);
 	int Shoot(Grid &target, char column, int row);
+	void Shoot_around(char column, int row);
 	int Count_ships();
 };
 
