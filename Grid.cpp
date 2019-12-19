@@ -3,17 +3,29 @@
 #include <string>
 
 
-Grid::Grid(string owner)
+Grid::Grid(string owner/*, bool is_opened_to_owner*/)
 {
 	this->owner = owner;
-	Tile* empty_tile = new Tile();
-		for (int i = 99; i >= 0; i--)
-		{
-			this->tiles[i] = *empty_tile;
-		}
+	Tile* empty_tile = new Tile(Tile::unknown);
+	//if (is_opened_to_owner) empty_tile->state = Tile::free;
+		
+	for (int i = 99; i >= 0; i--)
+	{
+		this->tiles[i] = *empty_tile;
+	}
 	delete empty_tile;
 }
 
+Grid::Grid(string owner, string layout)
+{
+	Tile* empty_tile = new Tile(Tile::free);
+	this->owner = owner;
+	for (int i = 0; i <= 99; i++)
+	{
+		this->tiles[i] = *empty_tile;
+		if (layout[i] == 'O') this->tiles[i].state = Tile::ship;
+	}
+}
 
 Grid::~Grid()
 {
@@ -36,9 +48,10 @@ void Grid::Display()
 	}
 }
 
-int Grid::Place_ship(int size, char orientation, int row, int column)
+int Grid::Place_ship(int size, char orientation, int row, char column_c)
 {
-	row--; column--;
+	int column = (int)column_c - (int)'a';
+	row--; //column--;
 	if((orientation == 'h') && (column - 1 + size >= 10) || (orientation == 'v') && (row - 1 + size >= 10))
 	{
 		std::cout << "CANNOT PLACE THIS SHIP HERE" << std::endl;
@@ -107,14 +120,14 @@ int Grid::Place_ship(int size, char orientation, int row, int column)
 	return 0;
 }
 
-int Grid::Shoot(Grid target, char column_c, int row)
+int Grid::Shoot(Grid &target, char column_c, int row)
 {
+	row--;
 	int column = (int)column_c - (int)'a';
 	if (column >= 10) return 1;
 	if (row >= 10) return 1;
-
 	int tile_number = 10 * row + column;
-	if (this->tiles[tile_number].state != Tile::unknown) return 2;
+	//if (this->tiles[tile_number].state != Tile::unknown) return 2;
 	
 	if (target.tiles[tile_number].state == Tile::free)
 	{

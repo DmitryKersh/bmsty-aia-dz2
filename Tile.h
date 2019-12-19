@@ -1,12 +1,16 @@
-#pragma once
+#ifndef TILE_H
+#define TILE_H
+
 class Tile
 {
 public:
+	enum states { unknown, free, ship, shot };
 	Tile();
-	Tile(char c);
+	Tile(Tile::states c);
 	~Tile();
-	enum states{ unknown, free, ship, shot };
-	states state; // '`' unknown; '-' free; 'O' ship; 'X' shot; 
+	states state; 
 	void Display();
 };
 
+
+#endif // !TILE_H

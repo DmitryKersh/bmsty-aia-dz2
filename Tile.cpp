@@ -7,21 +7,9 @@ Tile::Tile()
 	this->state = Tile::unknown;
 }
 
-Tile::Tile(char c)
+Tile::Tile(Tile::states c)
 {
-	switch (c)
-	{
-		case 'u': this->state = Tile::unknown;
-			break;
-		case 'f': this->state = Tile::free;
-			break;
-		case 's': this->state = Tile::ship;
-			break;
-		case 'h': this->state = Tile::shot;
-			break;
-		default:break;
-	}
-	
+	this->state = c;
 }
 
 
