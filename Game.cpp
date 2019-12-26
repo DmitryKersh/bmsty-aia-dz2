@@ -138,25 +138,56 @@ int ai_random(Grid &target)
 		if(i == 99) i = 0;
 	}
 }
-int ai_if_hit(Grid &target, int previous)
+int ai_if_hit(Grid &target, int last_hit)
 {
 	srand(time(NULL));
+
 	while(true)
 	{
-	    int check = 0;
-		if((previous % 10) && (rand() % 10 != 0))
-		    if(target.tiles[previous-10].state == Tile::unknown) return previous - 10;
-		    else check++;
-		if((previous % 10 != 9) && (rand() % 10 != 0))
-            if(target.tiles[previous+10].state == Tile::unknown) return previous + 10;
-            else check++;
-		if((previous / 10) && (rand() % 10 != 0))
-            if(target.tiles[previous-1].state == Tile::unknown) return previous - 1;
-            else check++;
-		if((previous / 10 != 9) && (rand() % 10 != 0))
-            if(target.tiles[previous+1].state == Tile::unknown) return previous + 1;
-            else check++;
-		if(check >= 4) return 222;
+	    int unable_counter = 0;
+		int able_max = 0;
+		
+		if(last_hit % 10)
+		{
+			able_max++;
+			if(target.tiles[last_hit-1].state == Tile::unknown)
+			{
+				//if(rand() % 10== 0)
+					return last_hit - 1;
+			}
+			else unable_counter++;
+		}
+		if(last_hit % 10 != 9)
+		{
+			able_max++;
+			if(target.tiles[last_hit+1].state == Tile::unknown)
+			{
+				//if(rand() % 10== 0)
+					return last_hit + 1;
+			}
+			else unable_counter++;
+		}
+		if(last_hit / 10)
+		{
+			able_max++;
+			if(target.tiles[last_hit-10].state == Tile::unknown)
+			{
+				//if(rand() % 10== 0)
+					return last_hit - 10;
+			}
+			else unable_counter++;
+		}
+		if(last_hit / 10 != 9)
+		{
+			able_max++;
+			if(target.tiles[last_hit+10].state == Tile::unknown)
+			{
+				//if(rand() % 10 == 0)
+					return last_hit + 10;
+			}
+			else unable_counter++;
+		}
+		if(unable_counter >= able_max) return 222;
 	}
 }
 

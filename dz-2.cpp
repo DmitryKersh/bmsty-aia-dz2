@@ -9,7 +9,7 @@ using std::cout;
 
 const string layout1 = "O-----O---------O------O-----O-O-O-----O---O-----O-----O---OOO---O---------O-O---O----------------OO";
 
-extern int ai_if_hit(Grid &target, int previous);
+extern int ai_if_hit(Grid &target, int last_hit);
 extern int ai_random(Grid &target);
 extern void mark_killed(Grid &locator, Grid &field);
 extern void place_ships_to_grid(Grid &target, Tile::states default_tile);
@@ -38,29 +38,29 @@ int main()
 			cout << "Enter <char column><int row> to shoot" << endl;
 			cin >> column_c >> row;
             res = (player_grid2.Shoot(bot_grid1, column_c, row));
-            mark_killed(player_grid2,bot_grid1);
-            player_grid2.Display();
 		} while (res == 4);
 
 		do {
+            mark_killed(bot_grid2,player_grid1);
             if(shot_is_not_random)
             {
-                ai_decision = ai_if_hit(player_grid1,last_hit);
+                ai_decision = ai_if_hit(bot_grid2,last_hit);
                 if(ai_decision == 222)
                 {
-                    ai_decision = ai_random(player_grid1);
-                    shot_is_not_random = true;
+                    ai_decision = ai_random(bot_grid2);
+                    shot_is_not_random = false;
                 }
             }
-            else ai_decision = ai_random(player_grid1);
-            res = bot_grid2.Shoot(player_grid1,(char)(ai_decision/10 + (int)'a'), ai_decision%10);
+            else ai_decision = ai_random(bot_grid2);
+
+            res = bot_grid2.Shoot(player_grid1,(char)(ai_decision%10 + (int)'a'), ai_decision/10 +1);
+            cout << (char)(ai_decision%10 + (int)'a') << ai_decision/10 +1 << endl;
             if(res == 4)
             {
                 shot_is_not_random = true;
                 last_hit = ai_decision;
             }
 
-			mark_killed(bot_grid2,player_grid1);
             bot_grid2.Display();
 		} while (res == 4);
 		cout << "NEXT TURN\n";
