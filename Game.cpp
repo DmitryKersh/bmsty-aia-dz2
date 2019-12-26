@@ -143,10 +143,20 @@ int ai_if_hit(Grid &target, int previous)
 	srand(time(NULL));
 	while(true)
 	{
-		if((previous % 10) && (rand() % 10 != 0)) return previous - 10;
-		if((previous % 10 != 9) && (rand() % 10 != 0)) return previous + 10;
-		if((previous / 10) && (rand() % 10 != 0)) return previous - 1;
-		if((previous / 10 != 9) && (rand() % 10 != 0)) return previous + 1;
+	    int check = 0;
+		if((previous % 10) && (rand() % 10 != 0))
+		    if(target.tiles[previous-10].state == Tile::unknown) return previous - 10;
+		    else check++;
+		if((previous % 10 != 9) && (rand() % 10 != 0))
+            if(target.tiles[previous+10].state == Tile::unknown) return previous + 10;
+            else check++;
+		if((previous / 10) && (rand() % 10 != 0))
+            if(target.tiles[previous-1].state == Tile::unknown) return previous - 1;
+            else check++;
+		if((previous / 10 != 9) && (rand() % 10 != 0))
+            if(target.tiles[previous+1].state == Tile::unknown) return previous + 1;
+            else check++;
+		if(check >= 4) return 222;
 	}
 }
 
